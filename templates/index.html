@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolskuy | Sisita</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Tools Sisita PE|UNEJ</h1>
+
+        <form action="/" method="GET" class="mb-4">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="filterJudul">Filter Judul:</label>
+                    <input type="text" class="form-control" id="filterJudul" name="filterJudul" value="{{ filterJudul }}">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="timeMin">Time Min:</label>
+                    <input type="date" class="form-control" id="timeMin" name="timeMin" value="{{ timeMin }}">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="timeMax">Time Max:</label>
+                    <input type="date" class="form-control" id="timeMax" name="timeMax" value="{{ timeMax }}">
+                </div>
+                <div class="form-group col-md-2 align-self-end">
+                    <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                </div>
+            </div>
+        </form>
+
+        {% if jumlah_data > 0 %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="mb-0">Ditemukan {{ jumlah_data }} Judul</p>
+                <form action="/download_excel" method="GET">
+                    <input type="hidden" name="filterJudul" value="{{ filterJudul }}">
+                    <input type="hidden" name="timeMin" value="{{ timeMin }}">
+                    <input type="hidden" name="timeMax" value="{{ timeMax }}">
+                    <button type="submit" class="btn btn-success">Download Excel</button>
+                </form>
+            </div>
+            <p class="text-center mt-4"> Create by @Lesskuy</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>No</th>
+                            <th>Kegiatan</th>
+                            <th>Tanggal</th>
+                            <th>Judul</th>
+                            <th>Turnitin Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ result.kegiatan }}</td>
+                                <td>{{ result.tanggal.strftime('%Y-%m-%d') if result.tanggal else 'Tidak ada tanggal' }}</td>
+                                <td>{{ result.judul }}</td>
+                                <td><a href="{{ result.turnitin_link }}" target="_blank">{{ result.turnitin_link }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Tidak ada data yang ditemukan atau terjadi kesalahan.</p>
+        {% endif %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
